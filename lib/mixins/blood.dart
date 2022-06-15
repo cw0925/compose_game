@@ -11,6 +11,11 @@ mixin Blood on PositionComponent{
   // 当前血条百分百
   double get _progress => _currentLife / lifePoint;
 
+  late TextComponent _text;
+  final double offsetY = 10; // 血条距构件顶部偏移量
+  final double widthRadio = 0.8; // 血条/构件宽度
+  final double lifeBarHeight = 4; // 血条高度
+
   void initPaint({
     required double lifePoint,
     Color lifeColor = Colors.red,
@@ -24,6 +29,13 @@ mixin Blood on PositionComponent{
 
     this.lifePoint = lifePoint;
     _currentLife = lifePoint;
+
+    _text = TextComponent(textRenderer: TextPaint(style: const TextStyle(color: Colors.black,fontSize: 10)));
+    updateBloodText();
+    double y = -(offsetY+_text.height+2);
+    double x = (size.x/2)*(1-widthRadio);
+    _text.position = Vector2(x, y);
+    add(_text);
   }
 
   @override
@@ -38,6 +50,7 @@ mixin Blood on PositionComponent{
         width: size.x * widthRadio,
         height: lifeBarHeight);
 
+    // print('object=== ' + _progress.toString());
     Rect lifeRect = Rect.fromPoints(
         rect.topLeft + Offset(rect.width * (1 - _progress), 0),
         rect.bottomRight);
@@ -52,7 +65,12 @@ mixin Blood on PositionComponent{
       _currentLife = 0;
       onDied();
     }
+    updateBloodText();
   }
 
   void onDied(){}
+
+  updateBloodText(){
+    _text.text = 'HP ${_currentLife.toInt()}';
+  }
 }

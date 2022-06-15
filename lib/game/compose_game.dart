@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:compose_game/component/hero_component.dart';
 import 'package:compose_game/component/monster_component.dart';
+import 'package:compose_game/component/touch_indicator.dart';
 import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
@@ -9,7 +10,7 @@ import 'package:flame/palette.dart';
 import 'package:flame/sprite.dart';
 import 'package:flutter/material.dart';
 
-class ComposeGame extends FlameGame with TapDetector {
+class ComposeGame extends FlameGame with TapDetector, PanDetector {
 
   late final HeroComponent player;
   // late final JoystickComponent joystick;
@@ -60,7 +61,14 @@ class ComposeGame extends FlameGame with TapDetector {
 
   @override
   void onTap() {
+    player.shoot();
     monster.loss(10);
+  }
+
+  @override
+  void onPanDown(DragDownInfo info) {
+    // TODO: implement onPanDown
+    add(TouchIndicator(position: info.eventPosition.global));
   }
 
 }
